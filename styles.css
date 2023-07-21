@@ -24,18 +24,30 @@
 
 #display {
     border: solid;
-    height: 32px;
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    padding: 20px;
+    height: 64px;
+    display: block;
+    padding: 10px 10px 30px;
     font-size: xxx-large;
     font-family: 'Courier New';
     font-weight: medium;
+    position: relative;
+}
+
+#operationDisplay { 
+    font-size: x-large;
+    padding: 0 5px;
+    position: absolute;
+    right: 0;
+    margin: 0;
+}
+
+#textDisplay{
+    position: absolute;
+    right: 0;
 }
 
 #buttonsDiv{
-    margin: 20Px 0 0 0;
+    margin: 20px 0 0 0;
     display: flex;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;

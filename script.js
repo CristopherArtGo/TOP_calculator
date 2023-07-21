@@ -2,8 +2,10 @@ let a = null;
 let b = null;
 let result = null;
 let operator = "";
+let nextOperator = "";
 let newInput = true;
 
+const operationDisplay = document.getElementById("operationDisplay");
 const display = document.getElementById("textDisplay");
 const allClear = document.getElementById("allClear");
 const clear = document.getElementById("clear");
@@ -23,6 +25,7 @@ const eight = document.getElementById("eight");
 const nine = document.getElementById("nine");
 const zero = document.getElementById("zero");
 const equal = document.getElementById("equal");
+const operatorButton = document.getElementsByClassName("operatorButton");
 
 allClear.addEventListener("click", function () {
     a = null;
@@ -30,7 +33,9 @@ allClear.addEventListener("click", function () {
     result = null;
     newInput = true;
     operator = "";
+    nextOperator = "";
     display.textContent = "0";
+    operationDisplay.textContent = "";
 });
 
 clear.addEventListener("click", function () {
@@ -138,186 +143,87 @@ zero.addEventListener("click", function (){
     }
 });
 
-add.addEventListener("click", function () {
-    operator = "add";
-    //clean slate
-    if (!a && !b) 
+const operate = {
+    "+": (a, b) => a + b,
+    "-": (a, b) => a - b,
+    "*": (a, b) => a * b,
+    "/": (a, b) => a / b
+}
+
+//need to use objects for operators for easy refactoring and overall code design
+function calculate() {
+
+    //used switch statement for cleaner code
+    switch (this.textContent) {
+        case "+":
+            nextOperator = "+";
+            break;
+        case "-":
+            nextOperator = "-";
+            break;
+        case "x":
+            nextOperator = "*";
+            break;
+        case "÷":
+            nextOperator = "/";
+            break;
+        default:
+            break;
+    }
+
+    //clean slate    
+    if (!a && !b && !operator) 
     {
         a = Number(display.textContent);
         newInput = true;
+        operator = nextOperator;
+        operationDisplay.textContent = `${a} ${operator}`;
     }
     
-    //if plus is clicked after equal
+    //if operator is clicked after equal
     else if (!a && result)
     {
         a = result;
         result = null;
         newInput = true;
+        operator = nextOperator;
+        operationDisplay.textContent = `${a} ${operator}`;
+        display.textContent = "0";
     }
 
-    //if plus is clicked again after plus
+    //if operator is clicked again after operator
     else if (a)
     {
         b = Number(display.textContent);
-        a += b;
+        a = operate[operator](a, b);
         display.textContent = a;
         newInput = true;
+        operator = nextOperator;
+        operationDisplay.textContent = `${a} ${operator}`;
+        display.textContent = "0";
     }
-});
+};
 
-subtract.addEventListener("click", function () {
-    operator = "subtract";
-    //clean slate
-    if (!a && !b) 
-    {
-        a = Number(display.textContent);
-        newInput = true;
-    }
-    
-    //if plus is clicked after equal
-    else if (!a && result)
-    {
-        a = result;
-        result = null;
-        newInput = true;
-    }
-
-    //if plus is clicked again after plus
-    else if (a)
-    {
-        b = Number(display.textContent);
-        a -= b;
-        display.textContent = a;
-        newInput = true;
-    }
-});
-
-multiply.addEventListener("click", function () {
-    operator = "multiply";
-    //clean slate
-    if (!a && !b) 
-    {
-        a = Number(display.textContent);
-        newInput = true;
-    }
-    
-    //if plus is clicked after equal
-    else if (!a && result)
-    {
-        a = result;
-        result = null;
-        newInput = true;
-    }
-
-    //if plus is clicked again after plus
-    else if (a)
-    {
-        b = Number(display.textContent);
-        a *= b;
-        display.textContent = a;
-        newInput = true;
-    }
-});
-
-divide.addEventListener("click", function () {
-    operator = "divide";
-    //clean slate
-    if (!a && !b) 
-    {
-        a = Number(display.textContent);
-        newInput = true;
-    }
-    
-    //if plus is clicked after equal
-    else if (!a && result)
-    {
-        a = result;
-        result = null;
-        newInput = true;
-    }
-
-    //if plus is clicked again after plus
-    else if (a)
-    {
-        b = Number(display.textContent);
-        a /= b;
-        display.textContent = a;
-        newInput = true;
-    }
-});
-
+add.addEventListener("click", calculate);
+subtract.addEventListener("click", calculate);
+multiply.addEventListener("click", calculate);
+divide.addEventListener("click", calculate);
 
 equal.addEventListener("click", function() {
-    if (operator == "add")
+    if(a)
     {
-       if(a)
-        {
-            b = Number(display.textContent);
-            result = a + b;
-            a = null;
-            display.textContent = result;
-            newInput = true;
-        }
-        else if (!a && result)
-        {
-            result += b;
-            display.textContent = result;
-            newInput = true;
-        }
+        b = Number(display.textContent);
+        result = operate[operator](a, b);
+        a = null;
+        display.textContent = result;
+        newInput = true;
+        operationDisplay.textContent += ` ${b} =`;
     }
-
-    if (operator == "subtract")
+    else if (!a && result)
     {
-       if(a)
-        {
-            b = Number(display.textContent);
-            result = a - b;
-            a = null;
-            display.textContent = result;
-            newInput = true;
-        }
-        else if (!a && result)
-        {
-            result -= b;
-            display.textContent = result;
-            newInput = true;
-        }
+        operationDisplay.textContent = `${result} ${operator} ${b} =`;
+        result = operate[operator](result, b);
+        display.textContent = result;
+        newInput = true;
     }
-
-    if (operator == "mulitply")
-    {
-       if(a)
-        {
-            b = Number(display.textContent);
-            result = a * b;
-            a = null;
-            display.textContent = result;
-            newInput = true;
-        }
-        else if (!a && result)
-        {
-            result *= b;
-            display.textContent = result;
-            newInput = true;
-        }
-    }
-
-    if (operator == "divide")
-    {
-       if(a)
-        {
-            b = Number(display.textContent);
-            result = a / b;
-            a = null;
-            display.textContent = result;
-            newInput = true;
-        }
-        else if (!a && result)
-        {
-            result /= b;
-            display.textContent = result;
-            newInput = true;
-        }
-    }
-
 });
