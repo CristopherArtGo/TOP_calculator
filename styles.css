@@ -31,6 +31,7 @@
     font-family: 'Courier New';
     font-weight: medium;
     position: relative;
+    background-color: rgb(227, 227, 227);
 }
 
 #operationDisplay { 
@@ -55,7 +56,7 @@
     gap: 5px;
 }
 
-.operatorButton {
+.keybutton.operatorButton {
     background-color: orange;
 }
 
@@ -74,9 +75,15 @@
 
 .keybutton {
     cursor: pointer;
+    background-color: rgb(227, 227, 227);
+    border-radius: 10%;
 }
 
-.keybutton:hover {
-    background-color: orange;
+#calculator-container{
+    background-color: rgb(16, 16, 16);
+    border-radius: 3%;
 }
 
+.keybutton.option {
+    background-color: rgb(135, 135, 135);
+}

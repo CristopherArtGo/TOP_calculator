@@ -57,16 +57,12 @@ del.addEventListener("click", function () {
 });
 
 decimal.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        newInput = false;
-        display.textContent = "0."
-    }
     if (decimalLock == false)
     {
         newInput = false;
         display.textContent += ".";
     }
+    newInput = false;
     decimalLock = true;
 });
 
