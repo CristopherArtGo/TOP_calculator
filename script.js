@@ -25,7 +25,8 @@ const eight = document.getElementById("eight");
 const nine = document.getElementById("nine");
 const zero = document.getElementById("zero");
 const equal = document.getElementById("equal");
-const operatorButton = document.getElementsByClassName("operatorButton");
+const decimal = document.getElementById("decimal");
+let decimalLock = false;
 
 allClear.addEventListener("click", function () {
     a = null;
@@ -36,10 +37,13 @@ allClear.addEventListener("click", function () {
     nextOperator = "";
     display.textContent = "0";
     operationDisplay.textContent = "";
+    decimalLock = false;
 });
 
 clear.addEventListener("click", function () {
     display.textContent = "0";
+    newInput = true;
+    decimalLock = false;
 });
 
 del.addEventListener("click", function () {
@@ -52,86 +56,39 @@ del.addEventListener("click", function () {
     }
 });
 
-one.addEventListener("click", function (){
+decimal.addEventListener("click", function (){
     if (newInput == true)
     {
-        display.textContent = "";
         newInput = false;
+        display.textContent = "0."
     }
-    display.textContent += "1";
+    if (decimalLock == false)
+    {
+        newInput = false;
+        display.textContent += ".";
+    }
+    decimalLock = true;
 });
 
-two.addEventListener("click", function (){
+//function created for all number buttons
+function numberButton() {
     if (newInput == true)
     {
         display.textContent = "";
         newInput = false;
     }
-    display.textContent += "2";
-});
+    display.textContent += this.textContent; 
+}
 
-three.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        display.textContent = "";
-        newInput = false;
-    }
-    display.textContent += "3";
-});
-
-four.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        display.textContent = "";
-        newInput = false;
-    }
-    display.textContent += "4";
-});
-
-five.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        display.textContent = "";
-        newInput = false;
-    }
-    display.textContent += "5";
-});
-
-six.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        display.textContent = "";
-        newInput = false;
-    }
-    display.textContent += "6";
-});
-
-seven.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        display.textContent = "";
-        newInput = false;
-    }
-    display.textContent += "7";
-});
-
-eight.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        display.textContent = "";
-        newInput = false;
-    }
-    display.textContent += "8";
-});
-
-nine.addEventListener("click", function (){
-    if (newInput == true)
-    {
-        display.textContent = "";
-        newInput = false;
-    }
-    display.textContent += "9";
-});
+one.addEventListener("click", numberButton);
+two.addEventListener("click", numberButton);
+three.addEventListener("click", numberButton);
+four.addEventListener("click", numberButton);
+five.addEventListener("click", numberButton);
+six.addEventListener("click", numberButton);
+seven.addEventListener("click", numberButton);
+eight.addEventListener("click", numberButton);
+nine.addEventListener("click", numberButton);
 
 zero.addEventListener("click", function (){
     if (newInput == false)
@@ -147,11 +104,13 @@ const operate = {
     "+": (a, b) => a + b,
     "-": (a, b) => a - b,
     "*": (a, b) => a * b,
-    "/": (a, b) => a / b
+    "÷": (a, b) => a / b
 }
 
 //need to use objects for operators for easy refactoring and overall code design
 function calculate() {
+    //this.style.backgroundColor = "gray";
+    //this.style.border = "solid black 5px";
 
     //used switch statement for cleaner code
     switch (this.textContent) {
@@ -165,7 +124,7 @@ function calculate() {
             nextOperator = "*";
             break;
         case "÷":
-            nextOperator = "/";
+            nextOperator = "÷";
             break;
         default:
             break;
@@ -174,7 +133,9 @@ function calculate() {
     //clean slate    
     if (!a && !b && !operator) 
     {
+        decimalLock = false;
         a = Number(display.textContent);
+        display.textContent = "0";
         newInput = true;
         operator = nextOperator;
         operationDisplay.textContent = `${a} ${operator}`;
@@ -183,6 +144,7 @@ function calculate() {
     //if operator is clicked after equal
     else if (!a && result)
     {
+        decimalLock = false;
         a = result;
         result = null;
         newInput = true;
@@ -194,8 +156,9 @@ function calculate() {
     //if operator is clicked again after operator
     else if (a)
     {
+        decimalLock = false;
         b = Number(display.textContent);
-        a = operate[operator](a, b);
+        a = Number(operate[operator](a, b).toFixed(2));
         display.textContent = a;
         newInput = true;
         operator = nextOperator;
@@ -213,17 +176,26 @@ equal.addEventListener("click", function() {
     if(a)
     {
         b = Number(display.textContent);
-        result = operate[operator](a, b);
+        result = Number(operate[operator](a, b).toFixed(2));
         a = null;
         display.textContent = result;
         newInput = true;
         operationDisplay.textContent += ` ${b} =`;
+        if (display.textContent.includes(".") == false)
+        {
+            decimalLock = false;
+        }
+        decimalLock = true;
     }
     else if (!a && result)
     {
-        operationDisplay.textContent = `${result} ${operator} ${b} =`;
-        result = operate[operator](result, b);
+        operationDisplay.textContent = `${display.textContent} ${operator} ${b} =`;
+        result = Number(operate[operator](+display.textContent, b).toFixed(2));
         display.textContent = result;
         newInput = true;
+        if (display.textContent.includes(".") == false)
+        {
+            decimalLock = false;
+        }
     }
 });
