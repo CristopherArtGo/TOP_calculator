@@ -138,7 +138,7 @@ function calculate() {
     }
     
     //if operator is clicked after equal
-    else if (!a && result)
+    else if (!a && result || a == 0)
     {
         decimalLock = false;
         a = result;
@@ -150,7 +150,7 @@ function calculate() {
     }
 
     //if operator is clicked again after operator
-    else if (a)
+    else if (a || a == 0)
     {
         decimalLock = false;
         b = Number(display.textContent);
@@ -169,7 +169,7 @@ multiply.addEventListener("click", calculate);
 divide.addEventListener("click", calculate);
 
 equal.addEventListener("click", function() {
-    if(a)
+    if(a || a == 0)
     {
         b = Number(display.textContent);
         result = Number(operate[operator](a, b).toFixed(2));
@@ -183,7 +183,7 @@ equal.addEventListener("click", function() {
         }
         decimalLock = true;
     }
-    else if (!a && result)
+    else if (!a && result || a == 0)
     {
         operationDisplay.textContent = `${display.textContent} ${operator} ${b} =`;
         result = Number(operate[operator](+display.textContent, b).toFixed(2));
